@@ -3,10 +3,174 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Редактор Cup of Joy</title>
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<title>Cup of Joy</title>
+<style>
+:root{--bg:#fff8f3;--card:#fff;--text:#4b3a33;--accent:#9b6b55;--soft:#ead8cc;--dark:#49372f}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
+header{position:sticky;top:0;z-index:10;background:#fffdfb;border-bottom:1px solid var(--soft);display:flex;align-items:center;gap:20px;padding:14px 6%;flex-wrap:wrap}
+.logo{font-weight:800;font-size:22px;margin-right:auto}.logo-img{height:46px;width:auto;object-fit:contain;display:none}
+nav{display:flex;gap:16px;flex-wrap:wrap}nav a{color:var(--text);text-decoration:none}
+button,.btn{border:0;border-radius:14px;padding:12px 18px;font:inherit;cursor:pointer}.edit{background:var(--dark);color:white}
+section{padding:75px 7%;min-height:420px}.hero{display:grid;grid-template-columns:1.2fr .8fr;align-items:center;gap:35px;min-height:560px}
+.badge{display:inline-block;background:#f1dfd3;padding:9px 14px;border-radius:30px;font-size:14px}.hero h1{font-size:64px;margin:20px 0 12px}.hero h1 span{color:var(--accent)}.hero p,.sub{font-size:18px;line-height:1.6;max-width:650px}.btn{display:inline-block;background:var(--accent);color:white;text-decoration:none;margin-top:12px}.hero-art{font-size:90px;text-align:center;padding:60px;background:#f7e8df;border-radius:40px}
+.title{text-align:center;font-size:36px;margin:0 0 12px}.sub{text-align:center;margin:0 auto 35px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:var(--card);border:1px solid var(--soft);border-radius:22px;padding:22px}.card h3{margin:0 0 8px}.price{font-weight:800;color:var(--accent);font-size:20px}.builder{max-width:900px;margin:auto;background:white;padding:28px;border-radius:24px;border:1px solid var(--soft)}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.grid label{font-weight:700;display:block}.grid select{width:100%;padding:13px;margin-top:8px;border-radius:12px;border:1px solid #d9c8be;background:white}.total{text-align:center;font-size:25px;font-weight:800;margin-top:25px}.about{max-width:800px;margin:auto;background:white;border:1px solid var(--soft);border-radius:24px;padding:30px;font-size:19px;line-height:1.7}.dark{background:var(--dark);color:white;text-align:center}.dark p{font-size:19px}.contact-info{white-space:pre-line}.editor-modal{display:none;position:fixed;inset:0;background:#0008;z-index:100;padding:16px;align-items:center;justify-content:center}.editor-panel{background:#fffaf6;width:min(850px,100%);max-height:92vh;overflow:auto;border-radius:24px;padding:25px}.editor-panel h2{margin-top:0}.slide-edit{border:1px solid var(--soft);background:white;border-radius:18px;padding:18px;margin:15px 0}.slide-edit h3{margin-top:0}.slide-edit label{display:block;font-weight:700;margin:12px 0}.slide-edit input,.slide-edit textarea,.slide-edit select{display:block;width:100%;margin-top:6px;padding:11px;border:1px solid #d8c7bd;border-radius:11px;font:inherit}.slide-edit textarea{min-height:75px;resize:vertical}.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.save{background:var(--accent);color:white}.reset{background:#eaded7}.close{background:white;border:1px solid #cdbdb3}
+@media(max-width:760px){.hero{grid-template-columns:1fr;min-height:auto}.hero h1{font-size:48px}.cards{grid-template-columns:1fr}.grid{grid-template-columns:1fr}section{padding:55px 5%}nav{order:3;width:100%;justify-content:center}}
+</style>
 </head>
 <body>
-<script src="https://cdn.jsdelivr.net/npm/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+<header>
+  <div class="logo">
+    <img id="logoImg" class="logo-img" alt="Логотип Cup of Joy">
+    <span id="brandText">Cup of Joy ☕</span>
+  </div>
+  <nav>
+    <a href="#home" id="navHome">Главная</a>
+    <a href="#boxes" id="navBoxes">Боксы</a>
+    <a href="#builder" id="navBuilder">Собрать</a>
+    <a href="#about" id="navAbout">Обо мне</a>
+    <a href="#contact" id="navContact">Контакты</a>
+  </nav>
+  <button class="edit" id="openEditor">✏️ Редактор</button>
+</header>
+
+<section class="hero" id="home">
+  <div>
+    <span class="badge" id="heroBadge">ПОДАРОК С ТЕПЛОМ ВНУТРИ</span>
+    <h1 id="heroTitle">Cup of <span>Joy</span></h1>
+    <p id="heroText">Тематические и индивидуальные подарочные боксы, созданные для маленьких моментов радости.</p>
+    <a class="btn" id="heroButton" href="#boxes">Посмотреть боксы</a>
+  </div>
+  <div class="hero-art" id="heroArt">☕🎁💗</div>
+</section>
+
+<section id="boxes">
+  <h2 class="title" id="boxesTitle">Наши боксы</h2>
+  <p class="sub" id="boxesText">Выбирай готовый вариант или создай свой подарок.</p>
+  <div class="cards" id="cards"></div>
+</section>
+
+<section id="builder">
+  <h2 class="title" id="builderTitle">Собери свой Cup of Joy</h2>
+  <p class="sub" id="builderText">Выбирай наполнение — стоимость считается автоматически.</p>
+  <div class="builder"><div class="grid" id="builderGrid"></div><div class="total"><span id="totalLabel">Итого:</span> <span id="total">0</span> ₽</div></div>
+</section>
+
+<section id="about">
+  <h2 class="title" id="aboutTitle">Обо мне</h2>
+  <div class="about" id="aboutText">Меня зовут Маша. Я создала Cup of Joy как школьный бизнес-проект, чтобы собирать красивые и уютные подарки для людей, которых хочется порадовать.</div>
+</section>
+
+<section id="contact" class="dark">
+  <h2 class="title" id="contactTitle">Заказать Cup of Joy</h2>
+  <p id="contactText">Напиши мне, какой бокс ты хочешь, и мы вместе соберём подарок.</p>
+  <p class="contact-info" id="contactInfo">📩 Здесь можно написать свои контакты.</p>
+</section>
+
+<footer id="footerText" style="text-align:center;padding:25px">© 2026 Cup of Joy · Подарочные боксы с теплом внутри</footer>
+
+<div class="editor-modal" id="editorModal">
+  <div class="editor-panel">
+    <h2>✏️ Редактор каждого слайда</h2>
+    <p>Здесь можно отдельно изменить каждый раздел сайта. Никакого кода не нужно.</p><label><b>Пароль редактора</b><input id="adminPassword" type="password" placeholder="Введите пароль"></label>
+    <div id="editorContent"></div>
+    <div class="row">
+      <button class="save" id="save">💾 Сохранить всё</button>
+      <button class="reset" id="reset">↩️ Вернуть исходные данные</button>
+      <button class="close" id="close">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const defaults={
+ brand:"Cup of Joy ☕",
+ logo:"",
+ nav:{home:"Главная",boxes:"Боксы",builder:"Собрать",about:"Обо мне",contact:"Контакты"},
+ hero:{badge:"ПОДАРОК С ТЕПЛОМ ВНУТРИ",title:"Cup of Joy",text:"Тематические и индивидуальные подарочные боксы, созданные для маленьких моментов радости.",button:"Посмотреть боксы",art:"☕🎁💗"},
+ boxes:{title:"Наши боксы",text:"Выбирай готовый вариант или создай свой подарок.",items:[
+  {name:"New Year Box",price:2500,desc:"Гринч-кружка, праздничный чай, свеча с мандарином и тёплые носочки."},
+  {name:"Halloween Box",price:2200,desc:"Мрачноватая кружка, чай, сладость и маленький тематический сюрприз."},
+  {name:"For Mom",price:2400,desc:"Нежная кружка, ароматный чай, свеча и приятная мелочь для мамы."},
+  {name:"Movie Box",price:2700,desc:"Кружка для кино, чай, сладость и всё для уютного вечера."},
+  {name:"Cozy Evening",price:2600,desc:"Тёплая кружка, любимый чай, свеча и уютное настроение."},
+  {name:"Birthday Box",price:2500,desc:"Праздничная кружка, чай, сладость и маленький подарок."}
+ ]},
+ builder:{title:"Собери свой Cup of Joy",text:"Выбирай наполнение — стоимость считается автоматически.",total:"Итого:",items:[
+  {label:"Кружка",options:[["Классическая",800],["Тематическая",1000],["С именем",1200]]},
+  {label:"Чай",options:[["Классический",400],["Фруктовый",500],["Праздничный",600]]},
+  {label:"Свеча",options:[["Без свечи",0],["Ароматическая",500],["Премиум",700]]},
+  {label:"Сладость",options:[["Шоколад",200],["Печенье",300],["Подарочная",400]]}
+ ]},
+ about:{title:"Обо мне",text:"Меня зовут Маша. Я создала Cup of Joy как школьный бизнес-проект, чтобы собирать красивые и уютные подарки для людей, которых хочется порадовать."},
+ contact:{title:"Заказать Cup of Joy",text:"Напиши мне, какой бокс ты хочешь, и мы вместе соберём подарок.",info:"📩 Здесь можно написать свои контакты."},
+ footer:"© 2026 Cup of Joy · Подарочные боксы с теплом внутри"
+};
+
+let data=loadLocal();
+let serverLoaded=false;
+function loadLocal(){try{return JSON.parse(localStorage.getItem("cupJoySlides"))||structuredClone(defaults)}catch(e){return structuredClone(defaults)}}
+async function loadServer(){
+ try{
+  const r=await fetch("/.netlify/functions/content",{cache:"no-store"});
+  if(r.ok){const j=await r.json(); if(j && j.data){data=j.data; serverLoaded=true; localStorage.setItem("cupJoySlides",JSON.stringify(data)); render();}}
+ }catch(e){}
+}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+
+function render(){
+ document.title=data.brand.replace("☕","").trim();
+ document.getElementById("brandText").textContent=data.brand;
+ document.getElementById("navHome").textContent=data.nav.home;document.getElementById("navBoxes").textContent=data.nav.boxes;document.getElementById("navBuilder").textContent=data.nav.builder;document.getElementById("navAbout").textContent=data.nav.about;document.getElementById("navContact").textContent=data.nav.contact;
+ document.getElementById("heroBadge").textContent=data.hero.badge;document.getElementById("heroTitle").textContent=data.hero.title;document.getElementById("heroText").textContent=data.hero.text;document.getElementById("heroButton").textContent=data.hero.button;document.getElementById("heroArt").textContent=data.hero.art;
+ document.getElementById("boxesTitle").textContent=data.boxes.title;document.getElementById("boxesText").textContent=data.boxes.text;
+ document.getElementById("cards").innerHTML=data.boxes.items.map(x=>`<article class="card"><h3>${esc(x.name)}</h3><div class="price">${esc(x.price)} ₽</div><p>${esc(x.desc)}</p></article>`).join("");
+ document.getElementById("builderTitle").textContent=data.builder.title;document.getElementById("builderText").textContent=data.builder.text;document.getElementById("totalLabel").textContent=data.builder.total;
+ document.getElementById("builderGrid").innerHTML=data.builder.items.map((x,i)=>`<label>${esc(x.label)}<select data-builder="${i}">${x.options.map(o=>`<option value="${o[1]}">${esc(o[0])} — ${o[1]} ₽</option>`).join("")}</select></label>`).join("");
+ document.querySelectorAll("[data-builder]").forEach(s=>s.onchange=calc);calc();
+ document.getElementById("aboutTitle").textContent=data.about.title;document.getElementById("aboutText").textContent=data.about.text;
+ document.getElementById("contactTitle").textContent=data.contact.title;document.getElementById("contactText").textContent=data.contact.text;document.getElementById("contactInfo").textContent=data.contact.info;
+ document.getElementById("footerText").textContent=data.footer;
+ const img=document.getElementById("logoImg");if(data.logo){img.src=data.logo;img.style.display="block";document.getElementById("brandText").style.display="none"}else{img.style.display="none";document.getElementById("brandText").style.display="inline"}
+}
+function calc(){let n=0;document.querySelectorAll("[data-builder]").forEach(s=>n+=Number(s.value)||0);document.getElementById("total").textContent=n}
+function input(label,id,value,area=false){return `<label>${label}${area?`<textarea id="${id}">${esc(value)}</textarea>`:`<input id="${id}" value="${esc(value)}">`}</label>`}
+function openEditor(){
+ const e=document.getElementById("editorContent");
+ e.innerHTML=`
+ <div class="slide-edit"><h3>🟤 Слайд 1 — Шапка сайта</h3>${input("Название бренда","brand",data.brand)}${input("Текст меню «Главная»","nHome",data.nav.home)}${input("Текст меню «Боксы»","nBoxes",data.nav.boxes)}${input("Текст меню «Собрать»","nBuilder",data.nav.builder)}${input("Текст меню «Обо мне»","nAbout",data.nav.about)}${input("Текст меню «Контакты»","nContact",data.nav.contact)}<label>Логотип (необязательно)<input type="file" id="logoFile" accept="image/png,image/jpeg,image/webp"></label></div>
+ <div class="slide-edit"><h3>🟤 Слайд 2 — Главная</h3>${input("Маленькая надпись","hBadge",data.hero.badge)}${input("Заголовок","hTitle",data.hero.title)}${input("Описание","hText",data.hero.text,true)}${input("Текст кнопки","hButton",data.hero.button)}${input("Картинка/значки справа (пока текстом)","hArt",data.hero.art)}</div>
+ <div class="slide-edit"><h3>🟤 Слайд 3 — Подарочные боксы</h3>${input("Заголовок","bTitle",data.boxes.title)}${input("Описание","bText",data.boxes.text,true)}${data.boxes.items.map((x,i)=>`<div class="slide-edit"><b>Бокс ${i+1}</b>${input("Название","bn"+i,x.name)}${input("Цена (₽)","bp"+i,x.price)}${input("Описание","bd"+i,x.desc,true)}</div>`).join("")}</div>
+ <div class="slide-edit"><h3>🟤 Слайд 4 — Собери свой бокс</h3>${input("Заголовок","buTitle",data.builder.title)}${input("Описание","buText",data.builder.text,true)}${input("Надпись перед ценой","buTotal",data.builder.total)}${data.builder.items.map((x,i)=>`<div class="slide-edit"><b>Категория ${i+1}</b>${input("Название","bl"+i,x.label)}${input("Варианты — каждый с новой строки в формате: название | цена","bo"+i,x.options.map(o=>o[0]+" | "+o[1]).join("\\n"),true)}</div>`).join("")}</div>
+ <div class="slide-edit"><h3>🟤 Слайд 5 — Обо мне</h3>${input("Заголовок","aTitle",data.about.title)}${input("Текст о себе","aText",data.about.text,true)}</div>
+ <div class="slide-edit"><h3>🟤 Слайд 6 — Заказ и контакты</h3>${input("Заголовок","cTitle",data.contact.title)}${input("Текст","cText",data.contact.text,true)}${input("Мои контакты","cInfo",data.contact.info,true)}</div>
+ <div class="slide-edit"><h3>🟤 Слайд 7 — Подвал</h3>${input("Текст внизу сайта","footer",data.footer)}</div>`;
+ document.getElementById("editorModal").style.display="flex";
+}
+function val(id){return document.getElementById(id).value}
+function save(){
+ data.brand=val("brand");data.nav={home:val("nHome"),boxes:val("nBoxes"),builder:val("nBuilder"),about:val("nAbout"),contact:val("nContact")};
+ data.hero={badge:val("hBadge"),title:val("hTitle"),text:val("hText"),button:val("hButton"),art:val("hArt")};
+ data.boxes.title=val("bTitle");data.boxes.text=val("bText");data.boxes.items.forEach((x,i)=>{x.name=val("bn"+i);x.price=Number(val("bp"+i))||0;x.desc=val("bd"+i)});
+ data.builder.title=val("buTitle");data.builder.text=val("buText");data.builder.total=val("buTotal");data.builder.items.forEach((x,i)=>{x.label=val("bl"+i);x.options=val("bo"+i).split("\\n").map(r=>r.split("|")).filter(r=>r.length>=2&&r[0].trim()).map(r=>[r[0].trim(),Number(r[1])||0])});
+ data.about={title:val("aTitle"),text:val("aText")};data.contact={title:val("cTitle"),text:val("cText"),info:val("cInfo")};data.footer=val("footer");
+ const file=document.getElementById("logoFile");if(file.files[0]){const reader=new FileReader();reader.onload=()=>{data.logo=reader.result;finishSave()};reader.readAsDataURL(file.files[0])}else finishSave();
+}
+async function finishSave(){
+ localStorage.setItem("cupJoySlides",JSON.stringify(data));
+ const pw=document.getElementById("adminPassword").value;
+ if(!pw){alert("Введите пароль редактора 🔐");return}
+ try{
+  const r=await fetch("/.netlify/functions/content",{method:"POST",headers:{"Content-Type":"application/json","X-Admin-Password":pw},body:JSON.stringify(data)});
+  if(!r.ok){alert("Не удалось сохранить изменения на сайте. Проверьте пароль.");return}
+  document.getElementById("editorModal").style.display="none";render();alert("Все изменения сохранены для всех посетителей ✨")
+ }catch(e){alert("Нет связи с сервером. Изменения пока сохранены только на этом устройстве.")}
+}
+document.getElementById("openEditor").onclick=openEditor;document.getElementById("close").onclick=()=>document.getElementById("editorModal").style.display="none";document.getElementById("save").onclick=save;
+document.getElementById("reset").onclick=()=>{if(confirm("Вернуть исходные данные всех слайдов?")){data=structuredClone(defaults);localStorage.setItem("cupJoySlides",JSON.stringify(data));render();openEditor()}};
+render();
+loadServer();
+</script>
 </body>
 </html>
